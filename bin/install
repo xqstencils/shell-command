@@ -1,0 +1,60 @@
+#!/bin/bash
+
+basedir="$(cd $(dirname $0) && pwd)"
+app_name=hello
+
+show_help()
+{
+  echo "Usage: install <command> [<args>]"
+  echo ""
+  echo "Some useful commands are:"
+  echo "    -h      Show help document."
+  echo "    -i      Provide a path to install."
+  echo "    -u      Provide a path to uninstall."
+  echo ""
+  echo "Examples:"
+  echo "    "
+  echo "    $>install -i /usr/opt/bin       #Install current command into point path."
+  echo "    $>install -u /usr/opt/bin       #Uninstall current command from point path."
+  echo ""
+}
+
+show_error()
+{
+  echo "Unkonwn argument! Please using '-h' to see the usage."
+}
+
+install()
+{
+  local target_path=$1
+  if [ -d $1 ]; then
+    cp -f "${basedir}/${app_name}" "${target_path}/${app_name}"
+    echo "Install success:"
+    echo "Command '${app_name}' has been installed in '${target_path}'."
+  else
+    echo "Error: "
+    echo "The target ${target_path} does not exist or not a directory."
+  fi
+}
+
+uninstall()
+{
+  local target_file=$1/${app_name}
+  if [ -d $1 ]; then
+    rm -f "${target_file}"
+    echo "Uninstall success: "
+    echo "Command '${app_name}' has been removed from '${target_path}'."
+  else
+    echo "Error: "
+    echo "The target ${target_path} does not exist or not a directory."
+  fi
+}
+
+while getopts ":hi:u:" opt; do
+  case $opt in
+    h) show_help && exit 0;;
+    i) install $OPTARG && exit 0;;
+    u) uninstall $OPTARG && exit 0;;
+    ?) show_error && exit 1;;
+  esac
+done

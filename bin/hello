@@ -1,0 +1,6 @@
+#!/bin/sh
+#file: bin/hello
+
+base_dir=$(cd `dirname $0`; pwd)
+
+echo "Hello command"
